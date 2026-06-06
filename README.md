@@ -7,7 +7,7 @@
 
 ![Output](https://github.com/AndryRafam/Program-Output/blob/master/enc_dec_neptune.gif)
 
-<h3 algin="left"> About </h3>
+<h2 algin="left"> About </h2>
 
 NeptuneCrypt is a lightweight CLI encryption (decryption) software using XChaCha20Poly1305 as an encryption algorithm and SHA256 as an hash key derivation function. The software encrypts files and folders.
 Password is generated randomly.
