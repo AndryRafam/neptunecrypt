@@ -12,5 +12,5 @@ deps = $(obj: .o=.d)
 
 LDFLAGS = -lcryptopp
 
-hades: $(obj)
+neptune: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
