@@ -16,7 +16,3 @@ Password is generated randomly.
 - Cryptographic Library: CryptoPP
 - Debugging: GNU Debugger, Valgrind
 - OS: Linux (Debian, Fedora)
-
-<h1 align="left"> WARNING !!! </h1>
-
-THIS SOFTWARE IS FOR PERSONAL USE ONLY. IT IS NOT INTENDED FOR INDUSTRIAL OR PROFESSIONAL USE.
