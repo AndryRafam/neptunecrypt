@@ -16,5 +16,5 @@ The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai
 
 <h3 align="left"> Future version </h3>
 
-- V2 version: V1 version + Aes256-gcm as cipher and also encrypts folders.
+- V2 version: V1 version + Aes256-gcm and also encrypts folders.
 - V3 version: V2 version + cascade cipher XChaCha-Aes (xchacha over aes).
