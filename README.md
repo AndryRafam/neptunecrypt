@@ -28,7 +28,7 @@ To build NeptuneCrypt, run the following command
 
 ```bash
 $make
-``
+```
 
 <h2 align="left"> Future version </h2>
 
