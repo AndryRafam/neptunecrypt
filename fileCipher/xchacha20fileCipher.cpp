@@ -1,12 +1,3 @@
-#include <cryptopp/cryptlib.h>
-#include <cryptopp/secblock.h>
-#include <cryptopp/chachapoly.h>
-#include <cryptopp/files.h>
-#include <cryptopp/osrng.h>
-#include <cryptopp/sha.h>
-#include <cryptopp/hkdf.h>
-#include <cryptopp/hex.h>
-
 #include <iostream>
 
 #include "xchacha20fileCipher.hpp"
