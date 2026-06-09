@@ -32,6 +32,8 @@ $ make
 Encrypting file is straightforward. To encrypt folder, first compress the folder and then encrypt with NeptuneCrypt.
 #### The following video shows how to encrypt folder on Linux/macOS.
 
+![Output](https://github.com/AndryRafam/NeptuneCrypt/blob/main/output/enc_dec.gif)
+
 <h2 align="left"> Future version </h2>
 
 - V2 version: V1 version + cascade cipher XChaCha-Aes (xchacha over aes).
