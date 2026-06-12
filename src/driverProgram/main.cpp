@@ -9,13 +9,10 @@
 
 #include "../simpleCipher/xchacha20Cipher.hpp"
 #include "../password/password_generator.hpp"
+#include "../password/set_echo.hpp"
 
 #define yellow "\x1B[33m"
 #define reset "\x1B[0m"
-
-// function used to not output
-// the password when typing
-void setEcho(bool enable);
 
 // main function
 int main(/*int argc, char **argv*/) {
@@ -49,27 +46,32 @@ int main(/*int argc, char **argv*/) {
 			std::string filePath;
 			std::getline(std::cin, filePath);
 			
-			// if file exist
-			// proceed for encryption
-			if(std::filesystem::exists(filePath)) {
-				
-				int passLen; // define password len
-				do {
-					std::cout << "Password length must be >= 16 and <= 256" << std::endl;
-					std::cout << "Password length ? >: ";
-					std::cin >> passLen;
-					std::cin.ignore();
-				} while(passLen < 16 || passLen > 256); // for security reason, password should be at least 16 characters long
-				
-				std::string password_xchacha20 = generatePassword(passLen);
-				std::cout << "Generated Password >: " << password_xchacha20 << std::endl;
-				xchacha20filefolder(mode, filePath, password_xchacha20);
+		// if file exist
+		// proceed for encryption
+		if(std::filesystem::exists(filePath)) {
+			
+			/*This portion of the code generate the password
+			length randomly using mersen twister*/
+			std::random_device rd; // seed the random number generator
+			std::mt19937 gen(rd()); // initialize the mersene twister
+
+			// define the distribution range between 16 to 64 include [16,64]
+			// this define the password length
+			std::uniform_int_distribution<int> distrib(16,64);
+			
+			int passLen = distrib(gen);
+
+			std::string password_xchacha20 = generatePassword(passLen);
+			std::cout << "Generated Password >: " << password_xchacha20 << std::endl;
+			if(xchacha20filefolder(mode, filePath, password_xchacha20)) {
+				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
 			}
-			// if file doesn't exist repeat the process
-			else {
-				std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
-				goto label_1_file_path; // repeat the process until a valid is input
-			}
+		}
+		// if file doesn't exist repeat the process
+		else {
+			std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
+			goto label_1_file_path; // repeat the process until a valid is input
+		}
 	}
 	// decryption
 	else if(mode=="d" || mode=="decrypt") {
@@ -80,22 +82,25 @@ int main(/*int argc, char **argv*/) {
 			std::string filePath;
 			std::getline(std::cin, filePath);
 			
-			// if file exist,
-			// proceed for decryption
-			if(std::filesystem::exists(filePath)) {
-				std::string password_xchacha20;
-				std::cout << "Enter your password >: ";
-				setEcho(false); // disable mirroring input to the screen
-				std::getline(std::cin, password_xchacha20); // password will not be outputed for security reason
-				setEcho(true); //
-				std::cout << std::endl;
-				xchacha20filefolder(mode, filePath, password_xchacha20);
+		// if file exist,
+		// proceed for decryption
+		if(std::filesystem::exists(filePath)) {
+			std::string password_xchacha20;
+			std::cout << "Enter your password >: ";
+			setEcho(false); // disable mirroring input to the screen
+			std::getline(std::cin, password_xchacha20); // password will not be outputed for security reason
+			setEcho(true); //
+			std::cout << std::endl;
+			if(xchacha20filefolder(mode, filePath, password_xchacha20)) {
+				std::cout << "\e[1m" << yellow << "Decrypted" << "\e[0m" << reset << "\n\n";
 			}
-				// if file doesn't exist repeat the process
-			else {
-				std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
-				goto label_2_file_path; // repeat the process until a valid is input
-			}
+
+		}
+			// if file doesn't exist repeat the process
+		else {
+			std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
+			goto label_2_file_path; // repeat the process until a valid is input
+		}
 	}
 	// default
 	else {
@@ -103,23 +108,5 @@ int main(/*int argc, char **argv*/) {
 		return 0;
 	}
 	return 0;		
-}
-
-// function setEcho
-void setEcho(bool enable) {
-	struct termios tty;
-	// get the current terminal attributes
-	tcgetattr(STDIN_FILENO, &tty);
-	
-	if(!enable) {
-		// clear the ECHO flag
-		tty.c_lflag &= ~ECHO;
-	}
-	else {
-		tty.c_lflag |= ECHO;
-	}
-	
-	// apply the modified attributes
-	tcsetattr(STDIN_FILENO, TCSANOW, &tty);
 }
 	
