@@ -59,10 +59,16 @@ int main(/*int argc, char **argv*/) {
 		std::cout << "\e[1mEnrolling Encryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
 
-		int cipher_selection; // select between xchacha20 et sm4
-		std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
-		std::cin >> cipher_selection;
-		std::cin.ignore();
+		int cipher_selection = 0; // initialize selection
+		while(cipher_selection != 1 && cipher_selection != 2) {
+			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\nChoice >: ";
+			std::cin >> cipher_selection;
+			std::cin.ignore();
+
+			if(cipher_selection !=1 && cipher_selection != 2) {
+				std::cout << "\e[1m" << yellow << "Unknown Encryption Cipher" << "\e[0m" << reset << std::endl;
+			}
+		}
 
 		/*Initialize random number [16,64] length
 		using mersene twister*/
@@ -85,11 +91,6 @@ int main(/*int argc, char **argv*/) {
 			std::cout << "Generated Password >: " << password << std::endl;
 			xchacha20filefolder(mode, filePath, password);
 			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
-		}
-		// default
-		else {
-			std::cout << "\e[1m" << yellow << "Unknown Encryption Cipher" << "\e[0m" << reset << std::endl;
-			return 0;
 		}
 	}
 	
@@ -117,7 +118,7 @@ int main(/*int argc, char **argv*/) {
 		}
 	}
 	
-	// default
+	// default if not encrypt of decrypt mode
 	else {
 		std::cout << "\e[1m" << "Invalid choice. Program terminated." << "\e[0m" << "\n\n";
 		return 0;
