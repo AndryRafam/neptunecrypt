@@ -6,12 +6,15 @@
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305 as cipher for simple encryption and XChaCha-Aes for cascade encryption (xchacha over aes) and SHA256 as hash key derivation function. 
+NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4 as cipher for simple encryption and SHA256 as hash key derivation function. 
 
 This V1 version encrypts files and folders using simple encryption only.
 The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
-![Output](https://github.com/AndryRafam/NeptuneCrypt/blob/main/output/demo.gif)
+<h3 align="left"> About the cipher </h3>
+
+- XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305#XChaCha20-Poly1305_%E2%80%93_extended_nonce_variant
+- SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher) 
 
 <h2 align="left"> Tools and Requierments for building </h2>
 
@@ -35,7 +38,6 @@ Encrypting file is straightforward. To encrypt folder, first compress/archive th
 
 <h2 align="left"> Future upgrade </h2>
 
-- V1 version + cascade cipher XChaCha-Aes (xchacha over aes).
 - V1 version + SM4 + AES as single cipher.
 
 
