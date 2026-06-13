@@ -8,7 +8,6 @@
 
 NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4 as cipher for simple encryption and SHA256 as hash key derivation function. 
 
-This V1 version encrypts files and folders using simple encryption only.
 The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
 <h3 align="left"> About the cipher </h3>
