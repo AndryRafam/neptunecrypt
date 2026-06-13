@@ -13,6 +13,7 @@ LDFLAGS = -lcryptopp
 neptune: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
+# Build and execute the program automatically
 run: neptune
 	./neptune
 
