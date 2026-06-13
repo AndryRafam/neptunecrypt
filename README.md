@@ -6,14 +6,15 @@
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4 as cipher for simple encryption and SHA256 as hash key derivation function. 
+NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM (will be added soon) as cipher for simple encryption and SHA256 as hash key derivation function. 
 
 The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
 
 <h3 align="left"> About the cipher </h3>
 
 - XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
-- SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher) 
+- SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher)
+- Aes256-GCM (orginal name Rijndael): https://en.wikipedia.org/wiki/Advanced_Encryption_Standard 
 
 <h2 align="left"> Tools and Requierments for building </h2>
 
