@@ -121,7 +121,7 @@ int main(/*int argc, char **argv*/) {
 				return 0;
 			}
 		}
-			// if file doesn't exist repeat the process
+		// if file doesn't exist repeat the process
 		else {
 			std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
 			goto label_2_file_path; // repeat the process until a valid is input
