@@ -13,23 +13,23 @@ deps = $(obj:.o=.d)
 
 LDFLAGS = -lcryptopp
 
-neptune: $(obj)
+poseidon: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 
 # install
-install: neptune
+install: poseidon
 	mkdir -p /usr/local/bin
-		cp -f neptune /usr/local/bin/neptune
+		cp -f poseidon /usr/local/bin/poseidon
 		
 # uninstall
-uninstall: neptune
-	rm -f /usr/local/bin/neptune
+uninstall: poseidon
+	rm -f /usr/local/bin/poseidon
 
 -include $(deps)
 
 .PHONY: clean install uninstall
 clean:
-	rm -f $(obj) $(deps) neptune
+	rm -f $(obj) $(deps) poseidon
 
 
