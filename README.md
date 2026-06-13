@@ -13,7 +13,7 @@ The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai
 
 <h3 align="left"> About the cipher </h3>
 
-- XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305#XChaCha20-Poly1305_%E2%80%93_extended_nonce_variant
+- XChaCha20Poly1305: https://en.wikipedia.org/wiki/ChaCha20-Poly1305
 - SM4-GCM (ShāngMì 4): https://en.wikipedia.org/wiki/SM4_(cipher) 
 
 <h2 align="left"> Tools and Requierments for building </h2>
