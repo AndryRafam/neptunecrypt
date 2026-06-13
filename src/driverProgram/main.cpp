@@ -1,4 +1,4 @@
-/* THIS PART OF THE PROGRAM WILL BE MODIFIED WITH V2 VERSION */
+/* THIS PART OF THE PROGRAM WILL BE MODIFIED WITH FUTRE UPGRADE*/
 
 #include <iostream>
 #include <string>
@@ -8,6 +8,7 @@
 #include <unistd.h>
 
 #include "../simpleCipher/xchacha20Cipher.hpp"
+#include "../simpleCipher/sm4.hpp"
 #include "../password/password_generator.hpp"
 #include "../password/set_echo.hpp"
 
@@ -40,7 +41,7 @@ int main(/*int argc, char **argv*/) {
 	if (mode=="e" || mode=="encrypt") {
 	
 		std::cout << "\e[1m" << "Encryption mode" << "\e[0m" << std::endl;
-		
+
 		label_1_file_path:
 			std::cout << "File absolute path >: ";
 			std::string filePath;
@@ -49,24 +50,60 @@ int main(/*int argc, char **argv*/) {
 		// if file exist
 		// proceed for encryption
 		if(std::filesystem::exists(filePath)) {
-			
-			/*This portion of the code generate the password
-			length randomly using mersen twister*/
-			std::random_device rd; // seed the random number generator
-			std::mt19937 gen(rd()); // initialize the mersene twister
 
-			// define the distribution range between 16 to 64 include [16,64]
-			// this define the password length
-			std::uniform_int_distribution<int> distrib(16,64);
-			
-			int passLen = distrib(gen);
+			int cipher_selection; // select between xchacha20 et sm4
+			std::cout << "\n" << "\e[1m" << "Select cipher" << "\e[0m" <<  std::endl;
+			std::cout << "1: SM4-GCM" << std::endl;
+			std::cout << "2: XChaCha20Poly1305" << std::endl;
+			std::cout << "Choice >: ";
+			std::cin >> cipher_selection;
+			std::cin.ignore();
 
-			std::string password_xchacha20 = generatePassword(passLen);
-			std::cout << "Generated Password >: " << password_xchacha20 << std::endl;
-			if(xchacha20filefolder(mode, filePath, password_xchacha20)) {
+			if(cipher_selection==1) { // SM4-GCM
+				
+				std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cihper" << "\e[0m" << reset << std::endl;
+				/*This portion of the code generate the password
+				length randomly using mersen twister*/
+				std::random_device rd_sm4; // seed the random number generator
+				std::mt19937 gen_sm4(rd_sm4()); // initialize the mersene twister
+
+				// define the distribution range between 16 to 64 include [16,64]
+				// this define the password length
+				std::uniform_int_distribution<int> distrib_sm4(16,64);
+			
+				int passLenSm4 = distrib_sm4(gen_sm4);
+
+				std::string password_sm4 = generatePassword(passLenSm4);
+				std::cout << "Generated Password >: " << password_sm4 << std::endl;
+				sm4filefolder(mode, filePath, password_sm4);
 				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
 			}
+			else if(cipher_selection==2) { // XChaCha20Poly1305
+			
+				std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cihper" << "\e[0m" << reset << std::endl;
+				/*This portion of the code generate the password
+				length randomly using mersen twister*/
+				std::random_device rd_xchacha; // seed the random number generator
+				std::mt19937 gen_xchacha(rd_xchacha()); // initialize the mersene twister
+
+				// define the distribution range between 16 to 64 include [16,64]
+				// this define the password length
+				std::uniform_int_distribution<int> distrib_xchacha(16,64);
+			
+				int passLenXchacha = distrib_xchacha(gen_xchacha);
+
+				std::string password_xchacha = generatePassword(passLenXchacha);
+				std::cout << "Generated Password >: " << password_xchacha << std::endl;
+				xchacha20filefolder(mode, filePath, password_xchacha);
+				std::cout << "\e[1m" << yellow << "Encrypted" << "\e[0m" << reset << "\n\n";
+			}
+			// default
+			else {
+				std::cout << "\e[1m" << yellow << "Unknown Choice" << "\e[0m" << reset << std::endl;
+				goto label_1_file_path; // repeat the process until a valid is input
+			}
 		}
+
 		// if file doesn't exist repeat the process
 		else {
 			std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
@@ -85,16 +122,23 @@ int main(/*int argc, char **argv*/) {
 		// if file exist,
 		// proceed for decryption
 		if(std::filesystem::exists(filePath)) {
-			std::string password_xchacha20;
+			std::string password;
 			std::cout << "Enter your password >: ";
 			setEcho(false); // disable mirroring input to the screen
-			std::getline(std::cin, password_xchacha20); // password will not be outputed for security reason
+			std::getline(std::cin, password); // password will not be outputed for security reason
 			setEcho(true); //
 			std::cout << std::endl;
-			if(xchacha20filefolder(mode, filePath, password_xchacha20)) {
-				std::cout << "\e[1m" << yellow << "Decrypted" << "\e[0m" << reset << "\n\n";
+			if(sm4filefolder(mode, filePath, password)) {
+				std::cout << "\e[1m" << yellow << "SM4-GCM - Decrypted" << "\e[0m" << reset << "\n\n";
 			}
-
+			else if(xchacha20filefolder(mode, filePath, password)) {
+				std::cout << "\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted" << "\e[0m" << reset << "\n\n";
+			}
+			// default
+			else {
+				std::cout << "\n" << "\e[1m" << "Cannot decrypt. Program terminated." << "\e[0m"  << "\n\n";
+				return 0;
+			}
 		}
 			// if file doesn't exist repeat the process
 		else {
@@ -104,7 +148,7 @@ int main(/*int argc, char **argv*/) {
 	}
 	// default
 	else {
-		std::cout << "\e[1m" << "Invalid choice. Program terminated." << "\e[0m" << std::endl;
+		std::cout << "\e[1m" << "Invalid choice. Program terminated." << "\e[0m" << "\n\n";
 		return 0;
 	}
 	return 0;		
