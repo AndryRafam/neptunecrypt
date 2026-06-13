@@ -2,7 +2,7 @@
 [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
-<h1 align="left"> NeptuneCrypt (v1) </h1>
+<h1 align="left"> NeptuneCrypt </h1>
 
 <h2 algin="left"> About </h2>
 
@@ -37,6 +37,6 @@ Encrypting file is straightforward. To encrypt folder, first compress/archive th
 
 <h2 align="left"> Future upgrade </h2>
 
-- V1 version + SM4 + AES as single cipher.
+- Adding Aes256-gcm as third cipher.
 
 
