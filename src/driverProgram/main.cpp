@@ -21,8 +21,8 @@ void about() {
 	std::cout << std::endl;
 	std::cout << "\e[1m";
 	std::cout << "=============================================================\n";
-	std::cout << " PoseidonCrypt Copyright © June 2026 Andry RAFAM ANDRIANJAFY.\n\n";
-	std::cout << " PoseidonCrypt is a free open-source encryption software.\n";
+	std::cout << " NeptuneCrypt Copyright © June 2026 Andry RAFAM ANDRIANJAFY.\n\n";
+	std::cout << " NeptuneCrypt is a free open-source encryption software.\n";
 	std::cout << " Password is randomly generated.\n\n";
 	std::cout << " This software comes with ABSOLUTELY NO WARRANTY.\n\n";
 	std::cout << " License: MIT\n";
@@ -121,10 +121,10 @@ int main(/*int argc, char **argv*/) {
 		setEcho(true); //
 		std::cout << std::endl;
 		if(sm4filefolder(mode, filePath, password)) {
-			std::cout << "\e[1m" << yellow << "SM4-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+			std::cout << "\n\e[1m" << yellow << "SM4-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
 		else if(xchacha20filefolder(mode, filePath, password)) {
-			std::cout << "\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+			std::cout << "\n\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
 		}
 		/*else if(aesfilefolder(mode, filePath, password)) {
 			std::cout << "\e[1m" << yellow << "Aes256-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
