@@ -1,5 +1,5 @@
 # To Install: sudo make install
-# To Uninstall: sudo make uninstall
+# To purge: sudo make purge
 
 ccsrc = $(wildcard src/simpleCipher/*.cpp) \
 		$(wildcard src/password/*.cpp) \
@@ -13,23 +13,21 @@ deps = $(obj:.o=.d)
 
 LDFLAGS = -lcryptopp
 
-poseidon: $(obj)
+neptune: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 
 # install
-install: poseidon
+install: neptune
 	mkdir -p /usr/local/bin
-		cp -f poseidon /usr/local/bin/poseidon
-		
-# uninstall
-uninstall: poseidon
-	rm -f /usr/local/bin/poseidon
+	cp -f neptune /usr/local/bin/neptune
 
+		
 -include $(deps)
 
-.PHONY: clean install uninstall
-clean:
-	rm -f $(obj) $(deps) poseidon
+.PHONY: purge
+purge:
+	rm -f /usr/local/bin/neptune
+	rm -f $(obj) $(deps) neptune
 
 
