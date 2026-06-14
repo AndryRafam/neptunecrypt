@@ -20,14 +20,16 @@
 void about() {
 	std::cout << std::endl;
 	const std::string aboutText = R"(
-  =============================================================
+  ===============================================================
    NeptuneCrypt Copyright © June 2026 Andry RAFAM ANDRIANJAFY.
-   Password is randomly generated.
+   
+   NeptuneCrypt is CLI encryption software. Password is randomly
+   generated.
 	 
    This software comes with ABSOLUTELY NO WARRANTY.
 	 
    License: MIT
-  =============================================================
+  ===============================================================
 	)";
 	std::cout << "\e[1m" << aboutText << "\e[0m"; 
 }
