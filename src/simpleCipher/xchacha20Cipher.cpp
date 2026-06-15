@@ -2,9 +2,6 @@
 
 #include "xchacha20Cipher.hpp"
 
-#define yellow "\x1B[33m"
-#define reset "\x1B[0m"
-
 using namespace CryptoPP;
 
 bool xchacha20filefolder(std::string mode, std::string filePath, std::string password) {
