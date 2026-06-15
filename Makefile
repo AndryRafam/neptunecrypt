@@ -8,7 +8,7 @@ endif
 
 # 3. Super user only rule
 ifneq ($(shell id -u), 0)
-$(error ERROR: You must run 'sudo make' to build this project.)
+$(error ERROR: You must run 'sudo make' to build and install this project.)
 endif
 
 .DEFAULT_GOAL := install
