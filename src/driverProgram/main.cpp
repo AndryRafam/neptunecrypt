@@ -59,7 +59,9 @@ int main(/*int argc, char **argv*/) {
 	
 	// encryption
 	if (mode=="e" || mode=="encrypt") {
-	
+
+		std::cout << "\033[H\033[J"; // clear the screen
+		about();
 		std::cout << "\e[1mEnrolling Encryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
 
@@ -107,6 +109,8 @@ int main(/*int argc, char **argv*/) {
 	
 	// decryption
 	else if(mode=="d" || mode=="decrypt") {
+		std::cout << "\033[H\033[J"; // clear the screen
+		about();
 		std::cout << "\e[1mEnrolling Decryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
 		
