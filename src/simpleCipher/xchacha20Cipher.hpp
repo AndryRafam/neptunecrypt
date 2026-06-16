@@ -15,3 +15,4 @@
 bool xchacha20filefolder(std::string mode, std::string filePath, std::string password);
 
 #endif
+
