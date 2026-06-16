@@ -13,6 +13,7 @@
 
 #define yellow "\x1B[33m"
 #define reset "\x1B[0m"
+#define highlight "\x1B[7m"
 
 // helper function to show about the program
 void about() {
@@ -20,14 +21,14 @@ void about() {
 Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
 https://github.com/andryrafam
 
-  NeptuneCrypt is free software, and
-  comes with ABSOLUTELY NO WARRANTY.
- ====================================
+ NeptuneCrypt is free software, and
+ comes with ABSOLUTELY NO WARRANTY.
+
 )";
 	std::cout << aboutText << std::endl;
 }
 
-// helper to safely get an existing path via user input
+// helper function to safely get an existing path via user input
 std::string getValidFilePath() {
 	std::string filePath;
 	while(true) {
@@ -38,43 +39,157 @@ std::string getValidFilePath() {
 			return filePath;
 		}
 		// if file doesn't exist repeat the process
-		std::cout << "\e[1m" << yellow << "File doesn't exist" << "\e[0m" << reset << std::endl;
+		std::cout << "\e[1m" << "File doesn't exist" << "\e[0m" << std::endl;
 	}
+}
+
+// helper function for interactive mode
+char getch() {
+    struct termios oldt, newt; // old terminal, new terminal
+    char ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
 }
 
 // main function
 int main(/*int argc, char **argv*/) {
-		
-	std::ios::sync_with_stdio(false);
-	
+
+	// Main menu
+	main_menu:
 	std::cout << "\033[H\033[J"; // clear the screen
 	about();
-	
-	label_mode:
-		// encryption or decryption
-		std::cout << "encrypt/decrypt (e/d) ? >: ";
-		std::string mode;
-		std::cin >> mode;
-		std::cin.ignore();
+
+	int select_mode = 0; // encryption, decryption, quit
+	char ch;
+
+	// [yes or no]
+	// this variable will be used after encryption
+	char yn;
+
+	std::cout << "\033[?25l"; // hide cursor
+
+	// part of code to interact with the mode choice: encrypt, decrypt or quit.
+	while (true) {
+		std::cout << "Select mode, use left/right key arrows, and then press enter:\n";
+
+		// line encrypt
+		if(select_mode==0) {
+			std::cout << " > " << highlight << "[ Encrypt ]" << reset << "  ";
+		} else {
+			std::cout << "   [ Encrypt ]  ";
+		}
+
+		// line decrypt
+		if(select_mode==1) {
+			std::cout << " > " << highlight << "[ Decrypt ]" << reset << "  ";
+		} else {
+			std::cout << "   [ Decrypt ]  ";
+		}
+
+		// line exit
+		if(select_mode==2) {
+			std::cout << " > " << highlight << "[ Exit ]" << reset << "\n";
+		} else {
+			std::cout << "   [ Exit ]\n";
+		}
+
+		ch = getch();
+
+		if(ch==27) { // ascii value for escape
+			getch(); // discard the intermediate '[' character
+			switch (getch()) { // read the final arrow character ('A' or 'B') directly
+				case 'D': // left arrow 
+					// if at leftmost item, wrap around to the rightmost, otherwise decrement
+					select_mode = (select_mode==0) ? 2 : select_mode - 1;
+					break;
+				case 'C': // right arrow
+					// if at rightmost item, wrap around to the leftmost, otherwise increment
+					select_mode = (select_mode==2) ? 0 : select_mode + 1; 
+					break;
+			}
+		} else if(ch==10) {
+			break; // enter key
+		}
+
+		std::cout << "\033[2A"; 
+	}
+
+	std::cout << "\033[?25h"; // restore cursor
+
+	// if the user choice is "Quit", exit the program immediately
+	if(select_mode==2) {
+		std::cout << "\033[H\033[J"; // clear the screen
+		about();
+		std::cout << "Program Terminated.\n\n";
+		return 0; // exit main function right here
+	}
+
+	std::string mode = (select_mode==0) ? "encrypt" : "decrypt";
 	
 	// encryption
-	if (mode=="e" || mode=="encrypt") {
+	if (mode=="encrypt") {
 
 		std::cout << "\033[H\033[J"; // clear the screen
 		about();
 		std::cout << "\e[1mEnrolling Encryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
 
-		int cipher_selection = 0; // initialize selection
-		while(cipher_selection != 1 && cipher_selection != 2 && cipher_selection != 3) {
-			std::cout << "\n\e[1mSelect cipher\e[0m\n1: SM4-GCM\n2: XChaCha20Poly1305\n3: Aes256-GCM\nChoice >: ";
-			std::cin >> cipher_selection;
-			std::cin.ignore();
+		int selection = 0; // initialize selection
 
-			if(cipher_selection !=1 && cipher_selection != 2 && cipher_selection !=3) {
-				std::cout << "\e[1m" << yellow << "Unknown Encryption Cipher" << "\e[0m" << reset << std::endl;
+		std::cout << "\033[?25l"; // hide cursor
+
+		// select cipher interactive
+		while (true) {
+			std::cout << "\nSelect cipher, use up/down key arrows, and then press enter:\n";
+
+			// SM4-GCM cipher mode
+			if(selection==0) {
+				std::cout << " > " << highlight << "SM4-GCM" << reset << "\n";
+			} else {
+				std::cout << "   SM4-GCM\n";
 			}
+
+			// XChaCha20Poly1305 cipher mode
+			if(selection==1) {
+				std::cout << " > " << highlight << "XChaCha20Poly1305" << reset << "\n";
+			} else {
+				std::cout << "   XChaCha20Poly1305\n";
+			}
+
+			// Aes256-GCM cipher mode
+			if(selection==2) {
+				std::cout << " > " << highlight << "Aes256-GCM" << reset << "\n";
+			} else {
+				std::cout << "   Aes256-GCM\n";
+			}
+
+			ch = getch();
+
+			if(ch==27) { // ascii value for escape
+				getch(); // discard the intermediate '[' character
+				switch (getch()) { // read the final arrow character ('A' or 'B') directly
+					case 'A': // up arrow
+						// if at top, wrap around to bottom, otherwise decrement
+						selection = (selection==0) ? 2 : selection-1;
+						break;
+					case 'B': // down arrow
+						selection = (selection==2) ? 0 : selection + 1; 
+						break;
+				}
+			} else if(ch==10) {
+				break; // enter key
+			}
+
+			// move up 5 lines to redraw seamlessly
+			std::cout << "\033[5A";
 		}
+
+		std::cout << "\033[?25h"; // restore cursor
 
 		/*Initialize random number [16,64] length
 		using mersene twister*/
@@ -84,70 +199,184 @@ int main(/*int argc, char **argv*/) {
 		int passLen = distrib(gen);
 		std::string password = generatePassword(passLen);
 
-		if(cipher_selection==1) { // SM4-GCM
-				
-			std::cout << "\n" << "\e[1m" << yellow << "SM4-GCM Cipher" << "\e[0m" << reset << std::endl;
+		// cipher name 
+		std::string cipher_name;
+		if(selection==0) {
+			cipher_name = "SM4-GCM";
+		} else if(selection==1) {
+			cipher_name = "XChaCha20Poly1305";
+		} else if(selection==2) {
+			cipher_name = "Aes256-GCM";
+		}
+
+		if(selection==0) { // SM4-GCM
+			
+			std::cout << "\033[H\033[J"; // clear the screen
+			about();
+			std::cout << "\e[1m" << "SM4-GCM Cipher Selected" << "\e[0m" << "\n\n";
 			std::cout << "Generated Password >: " << password << std::endl;
 			sm4filefolder(mode, filePath, password);
-			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
-		}
-		else if(cipher_selection==2) { // XChaCha20Poly1305
+			std::cout << "\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
 			
-			std::cout << "\n" << "\e[1m" << yellow << "XChaCha20Poly1305 Cipher" << "\e[0m" << reset << std::endl;
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
+		}
+		else if(selection==1) { // XChaCha20Poly1305
+			
+			std::cout << "\033[H\033[J"; // clear the screen
+			about();
+			std::cout << "\e[1m" << "XChaCha20Poly1305 Cipher Selected" << "\e[0m" << "\n\n";
 			std::cout << "Generated Password >: " << password << std::endl;
 			xchacha20filefolder(mode, filePath, password);
-			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n";
-		}
-		else if(cipher_selection==3) { // Aes256-GCM
+			std::cout << "\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
 
-			std::cout << "\n" << "\e[1m" << yellow << "Aes256-GCM Cihper" << "\e[0m" << reset << std::endl;
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
+		}
+		else if(selection==2) { // Aes256-GCM
+
+			std::cout << "\033[H\033[J"; // clear the screen
+			about();
+			std::cout << "\e[1m" << "Aes256-GCM Cihper Selected" << "\e[0m" << "\n\n";
 			std::cout << "Generated Password >: " << password << std::endl;
 			aesfilefolder(mode, filePath, password);
-			std::cout << "\e[1m" << yellow << "Encrypted Successfully" << "\e[0m" << reset << "\n\n"; 
+			std::cout << "\e[1m" << "Encrypted Successfully" << "\e[0m" << "\n\n";
+			
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
 		}
 	}
 	
 	// decryption
-	else if(mode=="d" || mode=="decrypt") {
+	else if(mode=="decrypt") {
+		
 		std::cout << "\033[H\033[J"; // clear the screen
 		about();
 		std::cout << "\e[1mEnrolling Decryption Mode\e[0m" << std::endl;
 		std::string filePath = getValidFilePath();
 		
 		std::string password;
-		std::cout << "Enter your password >: ";
+		std::cout << "Enter Password >: ";
 		setEcho(false); // disable mirroring input to the screen
 		std::getline(std::cin, password); // password will not be displayed for security reason
 		setEcho(true); //
 		std::cout << std::endl;
 		if(sm4filefolder(mode, filePath, password)) {
-			std::cout << "\n\e[1m" << yellow << "SM4-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+			std::cout << "\n\e[1m" << "SM4-GCM Decrypted Successfully" << "\e[0m" << "\n\n";
+
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
 		}
 		else if(xchacha20filefolder(mode, filePath, password)) {
-			std::cout << "\n\e[1m" << yellow << "XChaCha20Poly1305 - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+			std::cout << "\n\e[1m" << "XChaCha20Poly1305 Decrypted Successfully" << "\e[0m" << "\n\n";
+
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
 		}
 		else if(aesfilefolder(mode, filePath, password)) {
-			std::cout << "\n\e[1m" << yellow << "Aes256-GCM - Decrypted Successfully" << "\e[0m" << reset << "\n\n";
+			std::cout << "\n\e[1m" << "Aes256-GCM Decrypted Successfully" << "\e[0m" << "\n\n";
+
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
 		}
 		// default
 		else {
-			std::cout << "\n\e[1m" << "Cannot decrypt. Program terminated." << "\e[0m"  << "\n\n";
+			std::cout << "\nCannot decrypt." << "\n\n";
+
+			while(true) {
+				std::cout << "Continue ? [y/n] >: ";
+				std::cin >> yn;
+				std::cin.ignore();
+				if(yn=='y' || yn=='Y') {
+					goto main_menu; // go back to main menu
+				} else if(yn=='n' || yn=='N') {
+					std::cout << "\033[H\033[J"; // clear the screen
+					about();
+					std::cout << "Program Terminated.\n\n"; // exit the program
+					return 0;
+				} else {
+					std::cout << "Invalid input. Only [y/n]\n"; // invalid input. try again
+				}
+			}
 			return 0;
-		}
-	}
-	
-	// default if not encrypt or decrypt or quit.
-	else {
-		char c; // choose y/n;
-		std::cout << "Invalid mode. Do you want to quit ? (y/n) >: ";
-		std::cin >> c;
-		std::cin.ignore();
-		if(c=='y') {
-			std::cout << "\n\e[1m" << "Program terminated." << "\e[0m" << "\n\n";
-			return 0;
-		}
-		else {
-			goto label_mode;
 		}
 	}
 	return 0;		
