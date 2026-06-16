@@ -33,7 +33,7 @@ bool xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 			(const byte*)salt.data(), salt.size(), NULL, 0);
 			
 		// encryption
-		if(mode=="encrypt" || mode=="e") {
+		if(mode=="encrypt") {
 		
 			// encryption object
 			XChaCha20Poly1305::Encryption encryptor;
@@ -74,8 +74,8 @@ bool xchacha20filefolder(std::string mode, std::string filePath, std::string pas
 	
 	catch(Exception& ex) {
 		std::cout << std::endl;
-		std::cout << "\e[1m" << "Attempting to decrypt XChaCha20Poly1305" << "\e[0m" << "\n";
-		std::cout << "\e[1m" << ex.what() << "\e[0m" << "\n";
+		std::cout << "Attempting to decrypt XChaCha20Poly1305" << "\n";
+		std::cout << ex.what() << "\n";
 		
 		// remove the temporary file even decryption failed.
 		std::remove(tempfile.c_str());
