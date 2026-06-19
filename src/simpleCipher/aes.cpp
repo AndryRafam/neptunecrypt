@@ -1,5 +1,4 @@
 #include <iostream>
-#include <thread>
 
 #include "aes.hpp"
 
@@ -7,9 +6,8 @@ using namespace CryptoPP;
 
 bool aesfilefolder(std::string mode, std::string filePath, std::string password) {
 
-    // since Argon2id is multithreading
-	// check the number of threads
-	unsigned int threads = std::thread::hardware_concurrency();
+     // number of threads
+	const int threads = 4;
 
     // temporary file to avoid
     // data loss
