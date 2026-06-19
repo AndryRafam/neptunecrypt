@@ -4,7 +4,7 @@
 
 <h1 align="left"> NeptuneCrypt </h1>
 
-
+![](output/demo_neptune.gif)
 
 <h2 algin="left"> About </h2>
 
