@@ -6,7 +6,7 @@ using namespace CryptoPP;
 
 bool sm4filefolder(std::string mode, std::string filePath, std::string password) {
 
-     // number of threads
+    // number of threads
 	const int threads = 4;
 
     // temporary file to avoid
