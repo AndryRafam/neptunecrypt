@@ -6,9 +6,10 @@
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM as cipher for simple encryption and SHA256 as hash key derivation function. The software was built with C++ (std=23) and CryptoPP: https://github.com/weidai11/cryptopp
+NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, SM4-GCM and Aes-256-GCM as cipher for simple encryption and Argon2id for encryption key derivation from passwords.
+The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/
 
-![Neptune_Crypt](output/demo_v1.3.gif)
+
 
 <h2 align="left"> About the cipher </h2>
 
@@ -20,7 +21,7 @@ NeptuneCrypt is a lightweight CLI encryption software using XChaCha20Poly1305, S
 
 - Programming Language: C++ (std=17/20/23)
 - Debugger: GNU Debugger, Valgrind
-- CryptoPP: Version 8.9.0-2
+- cryptopp-modern: 2026.6.0 (https://cryptopp-modern.com/)
 - GNU Make
 - GNU C++ Compiler 14.2.0 or compatible
 
@@ -42,7 +43,7 @@ To purge NeptuneCrypt, go to the directory containing all the codes (for exemple
 This command will remove the binary file neptune and all dependencies.
 
 ```bash
-$ sudo make purge
+$ sudo make clean
 ```
 
 <h2 align="left"> How to encrypt folders ? </h2>
