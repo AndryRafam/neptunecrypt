@@ -17,7 +17,7 @@
 
 // helper function to show about the program
 void about() {
-	const std::string aboutText = R"(NeptuneCrypt-v1.0.3, Encryption Software, June 2026
+	const std::string aboutText = R"(NeptuneCrypt-v1.4, Encryption Software, June 2026
 Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
 https://github.com/andryrafam
 
