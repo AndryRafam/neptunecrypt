@@ -23,7 +23,9 @@ CXXFLAGS = -Wall -Wextra -std=c++23 -MMD -MP
 obj = $(ccsrc:.cpp=.o)
 deps = $(obj:.o=.d)
 
-LDFLAGS = -lcryptopp
+LDFLAGS = -L/usr/local/lib -lcryptopp -lpthread #= -lcryptopp -lpthread
+#LDLIBS = -lcryptopp -lpthread
+
 
 neptune: $(obj)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
@@ -37,8 +39,8 @@ install: neptune
 		
 -include $(deps)
 
-.PHONY: purge
-purge:
+.PHONY: clean
+clean:
 	rm -f /usr/local/bin/neptune
 	rm -f $(obj) $(deps) neptune
 
