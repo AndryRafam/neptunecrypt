@@ -45,9 +45,14 @@ bool aesfilefolder(std::string mode, std::string filePath, std::string password)
                 threads // number of threads
             );
         
-            // write Salt + IV + Ciphertext into a temporary binary file
             {
                 FileSink binarySink(tempfile.c_str());
+
+                // write ciphter ID for AES (0x01)
+                byte cipherID = 0x03;
+                binarySink.Put(&cipherID, 1);
+
+                // write Salt + IV + Ciphertext into a temporary binary file
                 binarySink.Put(salt, salt.size());
                 binarySink.Put(iv, iv.size());
 
@@ -79,7 +84,14 @@ bool aesfilefolder(std::string mode, std::string filePath, std::string password)
 
             // extract salt and IV out of the decoded temporary file
             std::ifstream in(tempfile_hex.c_str(), std::ios::binary);
+            
+            // extract and validate cipher ID
+            byte cipherID = 0;
+            in.read((char*)&cipherID, 1);
+            if (in.gcount()!=1) throw std::runtime_error("File truncated: Missing Cipher ID.");
+            if (cipherID != 0x03) throw std::runtime_error("Cipher ID mismatch: This file was not encrypted with AES.");
 
+            // extract salt and iv
             SecByteBlock salt(SALT_SIZE);
             in.read((char*)salt.data(), salt.size());
             if (in.gcount() != SALT_SIZE) throw std::runtime_error("File truncated: Missing salt.");
@@ -113,14 +125,15 @@ bool aesfilefolder(std::string mode, std::string filePath, std::string password)
                 std::rename(tempfile.c_str(), filePath.c_str());
                 return true;
             } else {
-                throw::std::runtime_error("\nAuthentication failed. Wrong password or corrupted data.\n");
+                throw::std::runtime_error("\nAuthentication failed.\n");
             }
         }
     }
 
     catch(Exception& ex) {
-        std::cout << "\nError encountered during Aes256-GCM processing:\n";
+        std::cout << "\nError encountered - Wrong password or Corrupted data.\n";
 		std::cout << ex.what() << "\n";
+		std::cout << "Cannot decrypt.\n\n";
 
         // remove the tempfile even if decryption failed
         std::remove(tempfile.c_str());
