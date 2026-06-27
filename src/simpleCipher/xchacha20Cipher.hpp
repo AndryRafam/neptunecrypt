@@ -1,5 +1,5 @@
-#ifndef XCHACHA20CIPHER_H
-#define XCHACHA20CIPHER_H
+#ifndef XCHACHA20_H
+#define XCHACHA20_H
 
 #include <fstream>
 #include <cstdio>
@@ -16,7 +16,7 @@
 
 #include <string>
 
-bool xchacha20filefolder(std::string mode, std::string filePath, std::string password);
+bool xchacha20_cipher(std::string mode, std::string filePath, std::string password);
 
 #endif
 
