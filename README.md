@@ -33,7 +33,7 @@ The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-m
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
 Create and enter a temporary build directory
 
-```bash
+```json
 $ cmake -B build -S .
 ```
 Compile the executable
