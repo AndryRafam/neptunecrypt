@@ -35,6 +35,10 @@ To build and install using makefile, type the following command in terminal. The
 ```bash
 $ sudo make
 ```
+To run on Linux, type the following command anywhere in terminal
+```bash
+$ neptune
+```
 <h3 align="left"> CMake </h3>
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
 
