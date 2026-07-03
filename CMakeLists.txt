@@ -23,7 +23,7 @@ if(NOT CRYPTOPP_LIB)
     message(FATAL_ERROR "ERROR: cryptopp library not found. Please install cryptopp-modern.")
 endif()
 
-# 5. Collect Source Files (Mirroring your Makefile wildcards)
+# 5. Collect Source Files
 file(GLOB CIPHER_SRCS "src/cipher/*.cpp")
 file(GLOB PASSWORD_SRCS "src/password/*.cpp")
 file(GLOB DRIVER_SRCS "src/driverProgram/*.cpp")
