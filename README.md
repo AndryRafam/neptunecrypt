@@ -45,7 +45,7 @@ $ cmake -B build -S .
 ```bash
 Compile the executable
 $ cmake --build build
-``
+```
 To run NeptuneCrypt on Linux, type the following command anywhere in terminal
 
 ```bash
