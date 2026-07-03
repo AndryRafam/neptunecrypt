@@ -29,16 +29,6 @@ The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-m
 - GNU C++ Compiler 14.2.0 or compatible
 
 <h2 align="left"> Build and install on Linux (Debian, Fedora) </h2>
-<h3 align="left"> Makefile </h3>
-To build and install using makefile, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
-
-```bash
-$ sudo make
-```
-To run on Linux, type the following command anywhere in terminal
-```bash
-$ neptune
-```
 <h3 align="left"> CMake </h3>
 To build and install using cmake, type the following command in terminal. The executable file will be installed at /usr/local/bin/ directory.
 Create and enter a temporary build directory
@@ -62,13 +52,6 @@ To run on Linux, type the following command anywhere in terminal
 $ neptune
 ```
 <h2 align="left"> Cleaning up </h2>
-<h3 align="left"> Makefile </h3>
-
-This command will remove the binary file neptune and all dependencies.
-
-```bash
-$ sudo make clean
-```
 <h3 align="left"> CMake </h3>
 
 ```bash
