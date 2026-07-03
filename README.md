@@ -25,8 +25,8 @@ The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-m
 - Programming Language: C++ (std=17/20/23)
 - Debugger: GNU Debugger, Valgrind
 - cryptopp-modern: 2026.6.0 (https://cryptopp-modern.com/)
-- GNU Make
 - GNU C++ Compiler 14.2.0 or compatible
+- CMake (>= 3.22 version)
 
 <h2 align="left"> Build and install on Linux (Debian, Fedora) </h2>
 <h3 align="left"> CMake </h3>
