@@ -14,13 +14,14 @@
 #include "../password/set_echo.hpp"
 
 constexpr std::string_view RESET = "\033[0m";
-constexpr std::string_view HIGHLIGHT = "\033[7m";
-constexpr std::string_view BOLD = "\e[1m";
+// constexpr std::string_view HIGHLIGHT = "\033[7m";
+constexpr std::string_view HIGHLIGHT = "\033[30;46m";
+constexpr std::string_view BOLD = "\033[1m";
 constexpr std::string_view BOLD_RED = "\033[1;31m";
 
 // forward declaration
 void about();
-std::string getValidFilePath();
+std::string getValidPath();
 char getch();
 bool askToContinue();
 void clearScreen();
@@ -46,23 +47,23 @@ int main() {
 
 			// line encrypt
 			if(select_mode==0) {
-				std::cout << "  " << HIGHLIGHT << "< Encrypt >" << RESET << " ";
+				std::cout << "  " << HIGHLIGHT << "< ENCRYPT >" << RESET << " ";
 			} else {
-				std::cout << "  < Encrypt > ";
+				std::cout << "  < ENCRYPT > ";
 			}
 
 			// line decrypt
 			if(select_mode==1) {
-				std::cout << "  " << HIGHLIGHT << "< Decrypt >" << RESET << " ";
+				std::cout << "  " << HIGHLIGHT << "< DECRYPT >" << RESET << " ";
 			} else {
-				std::cout << "  < Decrypt > ";
+				std::cout << "  < DECRYPT > ";
 			}
 
 			// line exit
 			if(select_mode==2) {
-				std::cout << "  " << HIGHLIGHT << "< Exit >" << RESET << "\n";
+				std::cout << "  " << HIGHLIGHT << "< EXIT >" << RESET << "\n";
 			} else {
-				std::cout << "  < Exit >\n";
+				std::cout << "  < EXIT >\n";
 			}
 
 			// Dynamic description Line
@@ -130,15 +131,13 @@ void about() {
 	std::cout << aboutText << std::endl;
 }
 
-std::string getValidFilePath() {
+std::string getValidPath() {
 	std::string filePath;
 	while(true) {
 		std::cout << "File absolute path >: ";
 		std::getline(std::cin, filePath);
 
-		if(std::filesystem::is_regular_file(filePath)) {
-			return filePath;
-		}
+		if(std::filesystem::is_regular_file(filePath)) return filePath;
 		// if file doesn't exist repeat the process
 		std::cout << BOLD << "File doesn't exist." << RESET << std::endl;
 	}
@@ -178,7 +177,7 @@ void clearScreen() {
 bool encryptionMode() {
 	clearScreen();
 	std::cout << BOLD << "Enrolling Encryption Mode" << RESET << std::endl;
-	std::string filePath = getValidFilePath();
+	std::string filePath = getValidPath();
 
 	const std::vector<std::string> ciphers = {
 		"SM4-GCM",
@@ -206,11 +205,11 @@ bool encryptionMode() {
 		}
 
 		std::cout << "\n";
-		if(action_selection==0) std::cout << "    " << HIGHLIGHT << "< Proceed >" << RESET << "  ";
-		else std::cout << "    < Proceed >  ";
+		if(action_selection==0) std::cout << "    " << HIGHLIGHT << "< PROCEED >" << RESET << "  ";
+		else std::cout << "    < PROCEED >  ";
 
-		if(action_selection==1) std::cout << "  " << HIGHLIGHT << "< Go Back >" << RESET << "\n";
-		else std::cout << "  < Go Back >\n";
+		if(action_selection==1) std::cout << "  " << HIGHLIGHT << "< GO BACK >" << RESET << "\n";
+		else std::cout << "  < GO BACK >\n";
 
 		std::cout << "\n\033[K";
 		if(action_selection==1) std::cout << "                 Back to Main Menu\n";
@@ -247,6 +246,7 @@ bool encryptionMode() {
 	std::cout << "\033[?25h"; // restore cursor
 
 	// initialize random number for password legnth [16,32]
+	// Initialize random number for password length [16,32]
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrib(16, 32);
@@ -277,7 +277,7 @@ bool encryptionMode() {
 bool decryptionMode() {
 	clearScreen();
 	std::cout << BOLD << "Enrolling Decryption Mode" << RESET << std::endl;
-	std::string filePath = getValidFilePath();
+	std::string filePath = getValidPath();
 
 	std::ifstream file(filePath, std::ios::binary);
 	if(!file) {
