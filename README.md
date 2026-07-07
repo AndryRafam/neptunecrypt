@@ -6,7 +6,13 @@
 
 **Earlier release v1.4 to v1.6 is available here:** https://gitlab.com/AndryRafam/neptunecrypt/-/releases
 
-![](output/demo_1.gif)
+<h3 align="left"> Generate Password </h3>
+
+![](output/automatic.gif)
+
+<h3 align="left"> Manual Password </h3>
+
+![](output/manual.gif)
 
 <h2 algin="left"> About </h2>
 
