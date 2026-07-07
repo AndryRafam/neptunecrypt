@@ -26,6 +26,7 @@ void about();
 std::string getValidPath();
 char getch();
 bool askToContinue();
+bool askManually(); // ask to input password manually
 void clearScreen();
 bool encryptionMode();
 bool decryptionMode();
@@ -123,7 +124,7 @@ int main() {
 /*================================================================*/
 
 void about() {
-	const std::string aboutText = R"( NeptuneCrypt 1.6, Encryption Software, June 2026
+	const std::string aboutText = R"( NeptuneCrypt 1.6.2, Encryption Software, June 2026
  Andry RAFAM ANDRIANJAFY <andryrafam@protonmail.com>
  https://github.com/andryrafam
 
@@ -160,7 +161,21 @@ char getch() {
 bool askToContinue() {
 	char yn; // [y/n]
 	while(true) {
-		std::cout << "Continue ? [y/n] >: ";
+		std::cout << "Continue ? [Y/n] >: ";
+		if(!(std::cin >> yn)) return false; // safely check for EOF/Ctrl+D
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+		if(yn=='y' || yn=='Y') return true;
+		if(yn=='n' || yn=='N') return false;
+		std::cout << "Invalid input. Only [y/n].\n"; // invalid input try again
+	}
+}
+
+// ask to input password manually
+bool askManually() {
+	char yn; // [y/n]
+	while(true) {
+		std::cout << "Input password manually ? [Y/n] >: ";
 		if(!(std::cin >> yn)) return false; // safely check for EOF/Ctrl+D
 		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -252,12 +267,35 @@ bool encryptionMode() {
     static std::random_device rd;
     static std::mt19937 gen(rd());
     std::uniform_int_distribution<int> distrib(16, 32);
-    std::string password = generatePassword(distrib(gen));
+    std::string password, confirm_password;
 
     clearScreen();
     std::string cipherName = ciphers[cipher_selection];
     std::cout << BOLD << cipherName << " Cipher Selected" << RESET << "\n\n";
-    std::cout << "Generated Password >: " << password << "\n";
+
+	if(askManually()) {
+		while(true) {
+			std::cout << "Password >: ";
+			setEcho(false);
+			std::getline(std::cin, password);
+			setEcho(true);
+			std::cout << "\n";
+			std::cout << "Confirm Password >: ";
+			setEcho(false);
+			std::getline(std::cin, confirm_password);
+			setEcho(true);
+			std::cout << "\n";
+
+			if(password==confirm_password) {
+				break;
+			}
+			std::cout << BOLD_RED << "Password does not match. Try again." << RESET << std::endl;
+		}
+	}
+	else {
+		password = generatePassword(distrib(gen));
+		std::cout << "Generated Password >: " << password << "\n";
+	}
 
 	// run selected cipher
 	if(cipher_selection==0) aes_cipher("encrypt", filePath, password);
@@ -266,7 +304,7 @@ bool encryptionMode() {
 	else if(cipher_selection==3) xchacha20_cipher("encrypt", filePath, password);
 
 	std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
-	std::cout << BOLD_RED << "CRITICAL: Do not lose your password or you will not recover your data." << RESET << "\n";
+	std::cout << BOLD_RED << "CRITICAL: Do not lose your password or you will not recover your data." << RESET << "\n\n";
 
 	if(askToContinue()) return true;
 
