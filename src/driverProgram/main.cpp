@@ -5,6 +5,7 @@
 #include <fstream>
 #include <termios.h>
 #include <unistd.h>
+#include <algorithm> // required for std::fill
 
 #include "../cipher/xchacha20.hpp"
 #include "../cipher/sm4.hpp"
@@ -21,6 +22,12 @@ constexpr std::string_view BOLD_RED = "\033[1;31m";
 
 namespace fs = std::filesystem;
 
+enum class AppMode {
+	Encrypt,
+	Decrypt,
+	Exit
+};
+
 // forward declaration
 void about();
 std::string getValidPath();
@@ -28,6 +35,7 @@ char getch();
 bool askToContinue();
 bool askManually(); // ask to input password manually
 void clearScreen();
+void secure_clear(std::string& s); // wipe string contents
 bool encryptionMode();
 bool decryptionMode();
 
@@ -39,7 +47,7 @@ int main() {
 	while(true) {
 		clearScreen();
 
-		int select_mode = 0; // encrypt or decrypt
+		AppMode select_mode = AppMode::Encrypt; // start with encrypt mode highligthed by default
 		char ch;
 
 		std::cout << "\033[?25l"; // hide cursor
@@ -49,21 +57,21 @@ int main() {
 			std::cout << "Choose mode using left/right key arrows and press enter:\n";
 
 			// line encrypt
-			if(select_mode==0) {
+			if(select_mode==AppMode::Encrypt) {
 				std::cout << "  " << HIGHLIGHT << "< ENCRYPT >" << RESET << " ";
 			} else {
 				std::cout << "  < ENCRYPT > ";
 			}
 
 			// line decrypt
-			if(select_mode==1) {
+			if(select_mode==AppMode::Decrypt) {
 				std::cout << "  " << HIGHLIGHT << "< DECRYPT >" << RESET << " ";
 			} else {
 				std::cout << "  < DECRYPT > ";
 			}
 
 			// line exit
-			if(select_mode==2) {
+			if(select_mode==AppMode::Exit) {
 				std::cout << "  " << HIGHLIGHT << "< EXIT >" << RESET << "\n";
 			} else {
 				std::cout << "  < EXIT >\n";
@@ -72,12 +80,10 @@ int main() {
 			// Dynamic description Line
 			std::cout << "\n"; // 1. add an extra empty line
 			std::cout << "\033[K"; // 2. clear the line to prevent "ghost text"
-			if(select_mode==0) {
-				std::cout << "\n";
-			} else if(select_mode==1) {
-				std::cout << "\n";
-			} else if(select_mode==2) {
+			if(select_mode==AppMode::Exit) {
 				std::cout << "                             Exit the Program\n";
+			} else {
+				std::cout << "\n";
 			}
 
 			ch = getch();
@@ -85,13 +91,15 @@ int main() {
 			if(ch==27) { // ascii value for escape
 				getch(); // discard the intermediate '[' character
 				switch (getch()) { // read the final arrow character ('A' or 'B') directly
-					case 'D': // left arrow 
-						// if at leftmost item, wrap around to the rightmost, otherwise decrement
-						select_mode = (select_mode==0) ? 2 : select_mode - 1;
+					case 'D': // left arrow (wrap around logic)
+						if(select_mode==AppMode::Encrypt) select_mode = AppMode::Exit;
+						else if(select_mode==AppMode::Decrypt) select_mode = AppMode::Encrypt;
+						else if(select_mode==AppMode::Exit) select_mode = AppMode::Decrypt;
 						break;
-					case 'C': // right arrow
-						// if at rightmost item, wrap around to the leftmost, otherwise increment
-						select_mode = (select_mode==2) ? 0 : select_mode + 1; 
+					case 'C': // right arrow (wrap around logic)
+						if(select_mode==AppMode::Encrypt) select_mode = AppMode::Decrypt;
+						else if(select_mode==AppMode::Decrypt) select_mode = AppMode::Exit;
+						else if(select_mode==AppMode::Exit) select_mode = AppMode::Encrypt; 
 						break;
 				}
 			} else if(ch==10) {
@@ -105,15 +113,15 @@ int main() {
 		std::cout << "\033[?25h"; // restore cursor
 
 		// if the user choice is "Exit", exit the program immediately
-		if(select_mode==2) {
+		if(select_mode==AppMode::Exit) {
 			clearScreen();
 			std::cout << "Program Terminated.\n\n";
 			return 0; // exit main function right here
 		}
 
-		if(select_mode==0) {
+		if(select_mode==AppMode::Encrypt) {
 			if(!encryptionMode()) return 0;
-		} else if(select_mode==1) {
+		} else if(select_mode==AppMode::Decrypt) {
 			if(!decryptionMode()) return 0;
 		}
 	}
@@ -188,6 +196,11 @@ bool askManually() {
 void clearScreen() {
 	std::cout << "\033[H\033[J"; // clear the screen
 	about();
+}
+
+// wipe password content
+void secure_clear(std::string& s) {
+	std::fill(s.begin(), s.end(), '\0');
 }
 
 // encryption mode
@@ -310,6 +323,10 @@ bool encryptionMode() {
 	else if(cipher_selection==2) twofish_cipher("encrypt", filePath, password);
 	else if(cipher_selection==3) xchacha20_cipher("encrypt", filePath, password);
 
+	// wipe password contents
+	secure_clear(password);
+	secure_clear(confirm_password);
+
 	std::cout << "\n" << BOLD << "Encrypted Successfully" << RESET << "\n";
 	std::cout << BOLD_RED << "CRITICAL: Do not lose your password or you will not recover your data." << RESET << "\n\n";
 
@@ -344,7 +361,8 @@ bool decryptionMode() {
 	setEcho(false);
 	std::getline(std::cin, password);
 	setEcho(true);
-	std::cout << std::endl;
+	std::cout << "\n";
+	std::cout << "\nFile to Process: " << filePath << "\n";
 
 	bool success = false;
 
@@ -353,10 +371,14 @@ bool decryptionMode() {
 	else if(cipherID=="03") success = twofish_cipher("decrypt", filePath, password);
 	else if(cipherID=="04") success = xchacha20_cipher("decrypt", filePath, password);
 	else {
+		secure_clear(password); // wipe password contents
 		std::cout << "\nCannot decrypt. Encryption algorithm not recognized." << "\n\n";
 		std::cout << "Program Terminated.\n\n";
         return false;
 	}
+
+	// wipe password contents
+	secure_clear(password);
 
 	if(success) std::cout << "\n" << BOLD << "Decrypted Successfully" << RESET << "\n";
 	if(askToContinue()) return true;
