@@ -4,11 +4,11 @@
 
 <h1 align="left"> NeptuneCrypt </h1>
 
-![](output/show.gif)
+![](output/1.6.3.gif)
 
 <h2 algin="left"> About </h2>
 
-NeptuneCrypt is a lightweight TUI (text based user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
+NeptuneCrypt is a lightweight TUI (text user interface) encryption software using Aes-256-GCM, SM4-GCM, Twofish-EAX and  XChaCha20Poly1305 as cipher for simple encryption and Argon2id for key derivation function (secure password hashing). The software was built with C++ (std=23) and cryptopp-modern: https://cryptopp-modern.com/. The user can choose between generating a random password or enter manually a custom password.
 
 <h2 align="left"> Supported Ciphers </h2>
 
