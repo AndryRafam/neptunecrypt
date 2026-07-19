@@ -3,8 +3,7 @@
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
 <h1 align="left"> Aegis (formerly NeptuneCrypt) </h1>
-
-![](output/1.6.4.png)
+![](output/screenshot-1.6.4.png)
 
 <h2 algin="left"> About </h2>
 
