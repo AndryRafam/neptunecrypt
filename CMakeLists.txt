@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(neptunecrypt LANGUAGES CXX)
+project(aegis LANGUAGES CXX)
 
 # 1. Detect the Operating System (Linux-only rule)
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -31,12 +31,12 @@ file(GLOB DRIVER_SRCS "src/driverProgram/*.cpp")
 set(ALL_SRCS ${CIPHER_SRCS} ${PASSWORD_SRCS} ${DRIVER_SRCS})
 
 # 6. Define the Executable Target
-add_executable(neptune ${ALL_SRCS})
+add_executable(aegis ${ALL_SRCS})
 
 # 7. Link Libraries
-target_link_libraries(neptune PRIVATE ${CRYPTOPP_LIB} Threads::Threads)
+target_link_libraries(aegis PRIVATE ${CRYPTOPP_LIB} Threads::Threads)
 
 # 8. Installation Rule
 include(GNUInstallDirs)
 # CMAKE_INSTALL_BINDIR defaults to "bin" (evaluates to /usr/local/bin by default)
-install(TARGETS neptune DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS aegis DESTINATION ${CMAKE_INSTALL_BINDIR})
