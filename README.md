@@ -2,8 +2,6 @@
 [![Debian](https://img.shields.io/badge/Debian-A81D33?logo=debian&logoColor=fff)](#)
 [![Fedora](https://img.shields.io/badge/Fedora-51A2DA?logo=fedora&logoColor=fff)](#)
 
-<h1 align="left"> Aegis (formerly NeptuneCrypt) </h1>
-
 ![](output/scs-1.6.4.png)
 
 <h2 algin="left"> About </h2>
